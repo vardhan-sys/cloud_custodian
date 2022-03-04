@@ -1,0 +1,31 @@
+policies:
+
+  - name: sg-add-permission
+    resource: security-group
+    filters:
+      - type: ingress
+        Cidr: "0.0.0.0/0"
+        OnlyPorts: [80,443]
+      - type: ingress
+        CidrV6: "::/0"
+        OnlyPorts: [80,443]
+        #It removes all SG rules which is open to public except (80,443). Either we have a tag or not
+    actions:
+      - type: remove-permissions
+        ingress: matched
+
+  - name: sg-add-permission-for-80-and-443
+    resource: security-group
+    filters:
+      - type: ingress
+        Cidr: "0.0.0.0/0"
+        Ports: [80,443]
+      - type: ingress
+        CidrV6: "::/0"
+        Ports: [80,443]
+      - not:
+             - tag:Restricted: "Restricted"
+        #It removes all SG rules which is open to public except the SG which have tag Restricted
+    actions:
+      - type: remove-permissions
+        ingress: matched
