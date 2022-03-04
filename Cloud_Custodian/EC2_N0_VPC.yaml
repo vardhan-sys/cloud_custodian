@@ -1,0 +1,9 @@
+policies:
+  - name: aws-ec2-classic-instances-terminate
+    resource: aws.ec2
+    filters:
+      - type: vpc
+        key: VpcId
+        value: absent
+    actions:
+      - stop
